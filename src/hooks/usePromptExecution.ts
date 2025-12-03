@@ -627,15 +627,6 @@ export function usePromptExecution(config: UsePromptExecutionConfig): UsePromptE
                 return;
               }
 
-              // 🐛 DEBUG: Log tool_result messages
-              if (data.type === 'user' && hasToolResult) {
-                console.log('[Gemini tool_result] Received:', {
-                  type: data.type,
-                  content: data.message?.content,
-                  timestamp: data.timestamp
-                });
-              }
-
               // 🔧 FIX: Handle delta messages - merge with last message of same type
               const isDelta = data.geminiMetadata?.delta || data.delta;
               const msgType = data.type;
@@ -689,18 +680,7 @@ export function usePromptExecution(config: UsePromptExecutionConfig): UsePromptE
               const message = convertGeminiToClaudeMessage(data);
 
               if (message) {
-                setMessages(prev => {
-                  const newMessages = [...prev, message];
-                  // 🐛 DEBUG: Log when adding tool_result message
-                  if (message.type === 'user' && hasToolResult) {
-                    console.log('[Gemini tool_result] Added to messages:', {
-                      previousCount: prev.length,
-                      newCount: newMessages.length,
-                      tool_use_id: message.message?.content?.[0]?.tool_use_id
-                    });
-                  }
-                  return newMessages;
-                });
+                setMessages(prev => [...prev, message]);
                 setRawJsonlOutput((prev) => [...prev, payload]);
 
                 // 🔧 NOTE: Session ID handling moved to gemini-cli-session-id event listener
