@@ -650,18 +650,29 @@ export function usePromptExecution(config: UsePromptExecutionConfig): UsePromptE
                     const newContent = data.message?.content;
 
                     if (Array.isArray(lastContent) && Array.isArray(newContent)) {
-                      // Find text blocks to merge
-                      const lastTextIdx = lastContent.findIndex((c: any) => c.type === 'text');
-                      const newText = newContent.find((c: any) => c.type === 'text')?.text || '';
+                      let updatedContent = [...lastContent];
+                      let merged = false;
 
-                      if (lastTextIdx >= 0 && newText) {
-                        // Merge text content
-                        const updatedContent = [...lastContent];
-                        updatedContent[lastTextIdx] = {
-                          ...updatedContent[lastTextIdx],
-                          text: (updatedContent[lastTextIdx].text || '') + newText
-                        };
+                      // Process each item in new content
+                      for (const newItem of newContent) {
+                        if (newItem.type === 'text') {
+                          // Merge text with existing text block
+                          const lastTextIdx = updatedContent.findIndex((c: any) => c.type === 'text');
+                          if (lastTextIdx >= 0 && newItem.text) {
+                            updatedContent[lastTextIdx] = {
+                              ...updatedContent[lastTextIdx],
+                              text: (updatedContent[lastTextIdx].text || '') + newItem.text
+                            };
+                            merged = true;
+                          }
+                        } else {
+                          // Append non-text items (tool_use, thinking, etc.)
+                          updatedContent.push(newItem);
+                          merged = true;
+                        }
+                      }
 
+                      if (merged) {
                         const updatedMsg = {
                           ...lastMsg,
                           message: {
