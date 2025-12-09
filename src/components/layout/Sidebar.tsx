@@ -140,9 +140,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         isExpanded ? "px-3" : "items-center",
         className
       )}
+      data-ui-content="true"
     >
       {/* Logo 区域 (Removed) */}
-      
+
       {/* 主导航区域 */}
       <div className={cn("flex-1 flex flex-col w-full", isExpanded ? "space-y-1" : "items-center space-y-2")}>
         {mainNavItems.map((item) => (
