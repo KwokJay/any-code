@@ -14,7 +14,7 @@ import { useSession } from "@/contexts/SessionContext";
 const MeasurableItem = ({ virtualItem, measureElement, isStreaming, children, ...props }: any) => {
   const elRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef(measureElement);
-  
+
   // 保持 measureElement 引用最新
   useEffect(() => {
     measureRef.current = measureElement;
@@ -126,7 +126,7 @@ export const SessionMessages = forwardRef<SessionMessagesRef, SessionMessagesPro
       if (message.type === 'assistant') {
         // Assistant messages with code blocks are larger
         const hasCodeBlock = message.content && typeof message.content === 'string' &&
-                            message.content.includes('```');
+          message.content.includes('```');
         return hasCodeBlock ? 300 : 200;
       }
       return 200; // Default fallback
@@ -190,13 +190,14 @@ export const SessionMessages = forwardRef<SessionMessagesRef, SessionMessagesPro
     <div
       ref={parentRef}
       className="flex-1 overflow-y-auto relative"
+      data-session-content="true"
       style={{
         paddingBottom: 'calc(240px + env(safe-area-inset-bottom))', // 增加底部空间，避免与动态高度的输入框重叠
         paddingTop: '20px',
       }}
     >
       <div
-        className="relative w-full max-w-5xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[85%] mx-auto px-4 pt-8 pb-4"
+        className="relative w-full mx-auto px-4 pt-8 pb-4"
         style={{
           height: `${Math.max(rowVirtualizer.getTotalSize(), 100)}px`,
           minHeight: '100px',
@@ -258,7 +259,7 @@ export const SessionMessages = forwardRef<SessionMessagesRef, SessionMessagesPro
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive w-full max-w-5xl mx-auto"
+          className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive w-full mx-auto"
           style={{ marginBottom: 'calc(80px + env(safe-area-inset-bottom))' }}
         >
           {error}

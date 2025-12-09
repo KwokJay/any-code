@@ -209,13 +209,13 @@ const FloatingPromptInputInner = (
 
         if (envVars && typeof envVars === 'object') {
           const customModel = envVars.ANTHROPIC_MODEL ||
-                             envVars.ANTHROPIC_DEFAULT_SONNET_MODEL ||
-                             envVars.ANTHROPIC_DEFAULT_OPUS_MODEL;
+            envVars.ANTHROPIC_DEFAULT_SONNET_MODEL ||
+            envVars.ANTHROPIC_DEFAULT_OPUS_MODEL;
 
           if (customModel && typeof customModel === 'string') {
             const isThirdPartyModel = !customModel.toLowerCase().includes('claude') &&
-                                     !customModel.toLowerCase().includes('sonnet') &&
-                                     !customModel.toLowerCase().includes('opus');
+              !customModel.toLowerCase().includes('sonnet') &&
+              !customModel.toLowerCase().includes('opus');
 
             if (isThirdPartyModel) {
               const customModelConfig: ModelConfig = {
@@ -439,7 +439,7 @@ const FloatingPromptInputInner = (
           className="border-b border-border/50 p-4"
         />
 
-        <div className="p-4 space-y-2">
+        <div className="p-4 space-y-2 w-full">
           <InputArea
             ref={textareaRef}
             prompt={state.prompt}
@@ -495,7 +495,7 @@ const FloatingPromptInputInner = (
             setEnableDualAPI={setEnableDualAPI}
             getEnabledProviders={getEnabledProviders}
             handleEnhancePromptWithAPI={handleEnhancePromptWithAPI}
-            onCancel={onCancel || (() => {})}
+            onCancel={onCancel || (() => { })}
             onSend={handleSend}
           />
         </div>

@@ -2,7 +2,8 @@
    🔤 TYPOGRAPHY & PROSE
    ======================================== */
 
-:root, .dark {
+:root,
+.dark {
   /* 🔤 Typography */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", "Arial Unicode MS", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, "Microsoft YaHei Mono", "微软雅黑", monospace;
@@ -14,6 +15,10 @@
   --font-size-2xl: 1.5rem;
   --font-size-3xl: 1.875rem;
   --font-size-4xl: 2.25rem;
+
+  /* 🎚️ Font Size Scaling (controlled by FontContext) */
+  --session-font-scale: 1;
+  --ui-font-scale: 1;
 }
 
 /* Prose styles for markdown rendering */
@@ -46,7 +51,12 @@
   margin-bottom: 1.2em;
 }
 
-.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
   margin-top: 0;
   margin-bottom: 0.8888889em;
   font-weight: 600;
@@ -79,7 +89,8 @@
   font-weight: 600;
 }
 
-.prose ol, .prose ul {
+.prose ol,
+.prose ul {
   margin-top: 1.25em;
   margin-bottom: 1.25em;
   padding-left: 1.625em;
@@ -90,12 +101,12 @@
   margin-bottom: 0.5em;
 }
 
-.prose > ul > li p {
+.prose>ul>li p {
   margin-top: 0.75em;
   margin-bottom: 0.75em;
 }
 
-.prose > ol > li > *:first-child {
+.prose>ol>li>*:first-child {
   margin-top: 1.25em;
 }
 
@@ -252,7 +263,9 @@
 /* --- DPI and Resolution Scaling Support --- */
 
 /* High DPI (Retina) displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+
   /* Increase font sizes slightly for better readability on high DPI displays */
   body {
     font-size: 14px;
@@ -261,62 +274,141 @@
 }
 
 /* Very high DPI displays (300dpi+) */
-@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+@media (-webkit-min-device-pixel-ratio: 3),
+(min-resolution: 288dpi) {
   body {
     font-size: 15px;
     line-height: 1.65;
   }
-  
-  .text-xs { font-size: 0.8rem; }
-  .text-sm { font-size: 0.9rem; }
-  .text-base { font-size: 1rem; }
-  .text-lg { font-size: 1.15rem; }
+
+  .text-xs {
+    font-size: 0.8rem;
+  }
+
+  .text-sm {
+    font-size: 0.9rem;
+  }
+
+  .text-base {
+    font-size: 1rem;
+  }
+
+  .text-lg {
+    font-size: 1.15rem;
+  }
 }
 
 /* Windows DPI scaling support */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+
   /* Windows specific DPI adjustments */
   body {
-    zoom: 1; /* Reset zoom to prevent double scaling */
+    zoom: 1;
+    /* Reset zoom to prevent double scaling */
   }
 }
 
 /* Support for Windows Display Scale Settings */
 @media (min-resolution: 144dpi) {
+
   /* 150% scaling */
-  .text-xs { font-size: 0.8rem; }
-  .text-sm { font-size: 0.9rem; }
+  .text-xs {
+    font-size: 0.8rem;
+  }
+
+  .text-sm {
+    font-size: 0.9rem;
+  }
 }
 
 @media (min-resolution: 192dpi) {
+
   /* 200% scaling */
-  .text-xs { font-size: 0.85rem; }
-  .text-sm { font-size: 0.95rem; }
+  .text-xs {
+    font-size: 0.85rem;
+  }
+
+  .text-sm {
+    font-size: 0.95rem;
+  }
 }
 
 @media (min-resolution: 288dpi) {
+
   /* 300% scaling */
-  .text-xs { font-size: 0.9rem; }
-  .text-sm { font-size: 1rem; }
+  .text-xs {
+    font-size: 0.9rem;
+  }
+
+  .text-sm {
+    font-size: 1rem;
+  }
 }
 
 /* Ultra-wide and large displays */
 @media (min-width: 1920px) {
+
   /* Larger displays can handle slightly larger base font sizes */
   body {
     font-size: 15px;
   }
-  
-  .text-xs { font-size: 0.8rem; }
-  .text-sm { font-size: 0.9rem; }
+
+  .text-xs {
+    font-size: 0.8rem;
+  }
+
+  .text-sm {
+    font-size: 0.9rem;
+  }
 }
 
 @media (min-width: 2560px) {
+
   /* 4K and above */
   body {
     font-size: 16px;
   }
-  
-  .text-xs { font-size: 0.85rem; }
-  .text-sm { font-size: 0.95rem; }
+
+  .text-xs {
+    font-size: 0.85rem;
+  }
+
+  .text-sm {
+    font-size: 0.95rem;
+  }
+}
+
+/* ========================================
+   🎚️ FONT SIZE SCALING
+   Controlled by FontContext via CSS variables
+   
+   Strategy: 
+   - Apply UI font scale to html (affects all rem units globally)
+   - Session areas use a separate variable applied to text content only
+   ======================================== */
+
+/* Global UI font scaling - applies to html root, affecting all rem units */
+html {
+  font-size: calc(16px * var(--ui-font-scale, 1)) !important;
+}
+
+/* Session area - define custom property for session font size */
+[data-session-content="true"] {
+  --session-font-size: calc(16px * var(--session-font-scale, 1));
+}
+
+/* Apply session font size to prose/text content, not layout containers */
+[data-session-content="true"] .prose,
+[data-session-content="true"] p,
+[data-session-content="true"] span:not([class*="w-"]):not([class*="h-"]),
+[data-session-content="true"] li {
+  font-size: var(--session-font-size) !important;
+  line-height: 1.75;
+}
+
+[data-session-content="true"] .prose code,
+[data-session-content="true"] pre,
+[data-session-content="true"] code {
+  font-size: calc(var(--session-font-size) * 0.875) !important;
 }

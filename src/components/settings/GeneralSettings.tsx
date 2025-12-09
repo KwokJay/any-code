@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { LanguageSelector } from "../LanguageSelector";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useFont } from "@/contexts/FontContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { api, type ClaudeSettings } from "@/lib/api";
 
@@ -29,7 +31,15 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
 }) => {
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
-  
+  const {
+    sessionFontScale,
+    uiFontScale,
+    setSessionFontScale,
+    setUiFontScale,
+    resetFontScales,
+    defaultScale
+  } = useFont();
+
   // Custom Claude path state
   const [customClaudePath, setCustomClaudePath] = useState<string>("");
   const [isCustomPathMode, setIsCustomPathMode] = useState(false);
@@ -54,14 +64,14 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
     try {
       setCustomPathError(null);
       await api.setCustomClaudePath(customClaudePath.trim());
-      
+
       // Clear the custom path field and exit custom mode
       setCustomClaudePath("");
       setIsCustomPathMode(false);
-      
+
       // Show success message
       setToast({ message: "自定义 Claude CLI 路径设置成功", type: "success" });
-      
+
       // Trigger status refresh
       window.dispatchEvent(new CustomEvent('validate-claude-installation'));
     } catch (error) {
@@ -188,7 +198,7 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
     <Card className="p-6 space-y-6">
       <div>
         <h3 className="text-base font-semibold mb-4">{t('settings.general')}</h3>
-        
+
         <div className="space-y-4">
           {/* Language Selector */}
           <LanguageSelector />
@@ -216,6 +226,84 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
               >
                 {t('settings.themeDark')}
               </Button>
+            </div>
+          </div>
+
+          {/* 🆕 Font Size Settings */}
+          <div className="space-y-4 border-t pt-4">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">字体大小设置</Label>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={resetFontScales}
+                disabled={sessionFontScale === defaultScale && uiFontScale === defaultScale}
+              >
+                <RotateCcw className="h-3 w-3 mr-1" />
+                重置
+              </Button>
+            </div>
+
+            {/* Session Font Size */}
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5 flex-1">
+                <Label htmlFor="sessionFontSize">会话字体大小</Label>
+                <p className="text-xs text-muted-foreground">
+                  调整会话消息区域的字体大小
+                </p>
+              </div>
+              <Select
+                value={String(sessionFontScale)}
+                onValueChange={(value) => setSessionFontScale(Number(value))}
+              >
+                <SelectTrigger className="w-24">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="50">50%</SelectItem>
+                  <SelectItem value="60">60%</SelectItem>
+                  <SelectItem value="70">70%</SelectItem>
+                  <SelectItem value="80">80%</SelectItem>
+                  <SelectItem value="90">90%</SelectItem>
+                  <SelectItem value="100">100%</SelectItem>
+                  <SelectItem value="110">110%</SelectItem>
+                  <SelectItem value="120">120%</SelectItem>
+                  <SelectItem value="130">130%</SelectItem>
+                  <SelectItem value="140">140%</SelectItem>
+                  <SelectItem value="150">150%</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* UI Font Size */}
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5 flex-1">
+                <Label htmlFor="uiFontSize">界面字体大小</Label>
+                <p className="text-xs text-muted-foreground">
+                  调整侧边栏、工具栏、设置面板等非会话区域的字体大小
+                </p>
+              </div>
+              <Select
+                value={String(uiFontScale)}
+                onValueChange={(value) => setUiFontScale(Number(value))}
+              >
+                <SelectTrigger className="w-24">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="50">50%</SelectItem>
+                  <SelectItem value="60">60%</SelectItem>
+                  <SelectItem value="70">70%</SelectItem>
+                  <SelectItem value="80">80%</SelectItem>
+                  <SelectItem value="90">90%</SelectItem>
+                  <SelectItem value="100">100%</SelectItem>
+                  <SelectItem value="110">110%</SelectItem>
+                  <SelectItem value="120">120%</SelectItem>
+                  <SelectItem value="130">130%</SelectItem>
+                  <SelectItem value="140">140%</SelectItem>
+                  <SelectItem value="150">150%</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -263,7 +351,7 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
               onCheckedChange={(checked) => updateSetting("includeCoAuthoredBy", checked)}
             />
           </div>
-          
+
           {/* Verbose Output */}
           <div className="flex items-center justify-between">
             <div className="space-y-0.5 flex-1">
@@ -293,7 +381,7 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
               onCheckedChange={handleRewindGitOpsToggle}
             />
           </div>
-          
+
           {/* Cleanup Period */}
           <div className="space-y-2">
             <Label htmlFor="cleanup">聊天记录保留天数</Label>
@@ -312,7 +400,7 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
               本地保留聊天记录的时长（默认：30天）
             </p>
           </div>
-          
+
 
           {/* Custom Claude Path Configuration */}
           <div className="space-y-4">
@@ -359,7 +447,7 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
                         <p className="text-xs text-red-500">{customPathError}</p>
                       )}
                     </div>
-                    
+
                     <div className="flex gap-2">
                       <Button
                         size="sm"
@@ -376,7 +464,7 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
                         恢复自动检测
                       </Button>
                     </div>
-                    
+
                     <div className="p-3 bg-muted rounded-md">
                       <div className="flex items-start gap-2">
                         <AlertCircle className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
